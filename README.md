@@ -2,4 +2,4 @@
 
 构建小型Transformer模型
 
-HouzTransformer
+[HouzTransformer](https://github.com/Abhsnd/llm_project/blob/main/HouzTransformer/readme.md)
