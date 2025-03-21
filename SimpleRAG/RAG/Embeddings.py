@@ -60,3 +60,40 @@ class OpenAIEmbedding(BaseEmbeddings):
             return self.client.embeddings.create(input=[text], model=model).data[0].embedding
         else:
             raise NotImplementedError
+
+
+class ZhipuEmbedding(BaseEmbeddings):
+    """
+    class for Zhipu embeddings
+    """
+    def __init__(self, path: str = '', is_api: bool = True) -> None:
+        super().__init__(path, is_api)
+        if self.is_api:
+            from zhipuai import ZhipuAI
+            self.client = ZhipuAI(api_key=os.getenv("ZHIPUAI_API_KEY"))
+
+    def get_embedding(self, text: str, model: str) -> List[float]:
+        response = self.client.embeddings.create(
+            model="embedding-2",
+            input=text
+        )
+        return response.data[0].embedding
+
+
+class DashscopeEmbedding(BaseEmbeddings):
+    """
+    class for Dashscope embeddings
+    """
+    def __init__(self, path: str = '', is_api: bool = True) -> None:
+        super().__init__(path, is_api)
+        if self.is_api:
+            import dashscope
+            dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
+            self.client = dashscope.TextEmbedding
+
+    def get_embedding(self, text: str, model: str) -> List[float]:
+        response = self.client.call(
+            model="text-embedding-v1",
+            input=text
+        )
+        return response.output['embeddings'][0]['embedding']
